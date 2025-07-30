@@ -10,6 +10,7 @@ async def generate_start_text(message):
 
 add_button_text = 'ДОБАВИТЬ РАСХОД'
 get_review_button_text = 'СВЕРКА ДНЯ'
+kassa_button_text = 'КАССА'
 start_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
@@ -17,18 +18,46 @@ start_keyboard = ReplyKeyboardMarkup(
         ],
         [
             KeyboardButton(text=get_review_button_text)
+        ],
+        [
+            KeyboardButton(text=kassa_button_text)
         ]
     ],
     resize_keyboard=True
 )
 
+cancel_button = KeyboardButton(text='ОТМЕНА')
+
 cancel_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text='ОТМЕНА')
+            cancel_button
         ]
     ],
     resize_keyboard=True
+)
+
+revenue_button_text = 'ВЫРУЧКА'
+exspense_button_text = 'РАСХОД'
+collation_button_text = 'СВЕРКА'
+
+kassa_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text=revenue_button_text),
+        ],
+        [
+            KeyboardButton(text=exspense_button_text),
+        ],
+        [
+            KeyboardButton(text=collation_button_text),
+        ],
+        [
+            cancel_button
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True
 )
 
 

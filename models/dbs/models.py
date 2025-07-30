@@ -1,6 +1,6 @@
 import datetime
 import pytz
-from sqlalchemy import ForeignKey, BigInteger, Date, func
+from sqlalchemy import ForeignKey, BigInteger, Date, String, func
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from models.databases import Base
 
@@ -34,3 +34,15 @@ class Chat(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     chat_tg_id: Mapped[int] = mapped_column(BigInteger, unique=True)
+    
+    
+class CashOperation(Base):
+    __tablename__ = 'cash_operations'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_tg_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.telegram_id"))
+    amount: Mapped[int]  # Сумма операции (положительная для выручки, отрицательная для расхода)
+    description: Mapped[str] = mapped_column(String, nullable=True)  # Описание операции (опционально)
+    operation_date: Mapped[datetime.datetime] = mapped_column(
+        default=lambda: datetime.datetime.now(pytz.timezone("Asia/Yekaterinburg"))
+    )

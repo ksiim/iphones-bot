@@ -11,6 +11,44 @@ import pytz
 class Orm:
     
     @staticmethod
+    async def add_cash_operation(user_tg_id, amount, description=None):
+        async with Session() as session:
+            operation = CashOperation(
+                user_tg_id=user_tg_id,
+                amount=amount,
+                description=description
+            )
+            session.add(operation)
+            await session.commit()
+            
+    @staticmethod
+    async def get_today_cash_operations():
+        async with Session() as session:
+            today = datetime.now(pytz.timezone("Asia/Yekaterinburg")).date()
+            query = select(CashOperation).where(
+                func.date(CashOperation.operation_date) == today
+            )
+            operations = (await session.execute(query)).scalars().all()
+            return operations
+
+    @staticmethod
+    async def get_balance_before_today():
+        async with Session() as session:
+            today = datetime.now(pytz.timezone("Asia/Yekaterinburg")).date()
+            query = select(func.sum(CashOperation.amount)).where(
+                func.date(CashOperation.operation_date) < today
+            )
+            balance = (await session.execute(query)).scalar() or 0
+            return balance
+
+    @staticmethod
+    async def get_total_balance():
+        async with Session() as session:
+            query = select(func.sum(CashOperation.amount))
+            balance = (await session.execute(query)).scalar() or 0
+            return balance
+    
+    @staticmethod
     async def add_new_chat(chat_tg_id):
         async with Session() as session:
             chat = await session.execute(select(Chat).where(Chat.chat_tg_id == chat_tg_id))
